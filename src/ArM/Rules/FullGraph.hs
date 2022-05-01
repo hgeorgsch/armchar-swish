@@ -28,12 +28,14 @@ import ArM.Rules.RDFS
 import Swish.VarBinding (varBindingId) 
 
 -- | Infere resource properties from class
-prepareGraph res = fwdApplyListSR res [ advancevfgrantRule
-                                      , grantRule
-                                      , spectraitRule
-                                      , rRule ]
-                 . fwdApplyListS res rdfstypeRules
-                 . fwdApplyListSR res rdfsRules
+prepareGraph res = delete res
+                 . fwdApplyListR [ advancevfgrantRule
+                                 , grantRule
+                                 , spectraitRule
+                                 , rRule ]
+                 . fwdApplyList rdfstypeRules
+                 . fwdApplyListR rdfsRules
+                 . merge res
 
 rRule = makeCRule "rRule" l1 l2
     where l1 = [ arc sVar ( Res $ makeSN "traitClass" ) tVar,

@@ -35,20 +35,16 @@ readGraph fn = do
 
 -- | Load the different graph and make initial inferences
 -- See diagram in README.
--- Note.  The character graph includes inferences based on schema
--- and resources, but the graphs have not been merged.
+-- Note.  The character graph has to be augmented in `ArM.STM`.
 getGraph :: String -> String -> String -> IO (RDFGraph,RDFGraph,RDFGraph)
 getGraph characterFile armFile resourceFile = do
         character <- readGraph characterFile 
         schemaGraph' <- readGraph armFile 
         resourceGraph' <- readGraph resourceFile 
-
         let schemaGraph = prepareSchema schemaGraph'
-        let characterGraph = prepareInitialCharacter schemaGraph character
         let resourceGraph = prepareResources resourceGraph'
-        let charGraph = prepareGraph resourceGraph characterGraph 
+        -- let characterGraph = prepareInitialCharacter schemaGraph character
+        -- let charGraph = prepareGraph resourceGraph characterGraph 
         -- let res = applyRDFS $ merge schemaGraph resourceGraph
-        return $ schemaGraph `par` resourceGraph `par` 
-               characterGraph `pseq`
-               ( charGraph, schemaGraph, resourceGraph )
+        return ( character, schemaGraph, resourceGraph )
 
