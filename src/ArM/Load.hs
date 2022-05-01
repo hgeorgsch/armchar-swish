@@ -35,8 +35,8 @@ readGraph fn = do
 
 -- | Load the different graph and make initial inferences
 -- See diagram in README.
--- Note: the third graph `res` has merged the schema and the resource
--- graph.  This is not reflected in the diagram.
+-- Note.  The character graph includes inferences based on schema
+-- and resources, but the graphs have not been merged.
 getGraph :: String -> String -> String -> IO (RDFGraph,RDFGraph,RDFGraph)
 getGraph characterFile armFile resourceFile = do
         character <- readGraph characterFile 

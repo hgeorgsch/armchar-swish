@@ -5,7 +5,6 @@
 # Saga
 arm:Saga a owl:Class .
 arm:hasSG a   owl:DatatypeProperty, arm:CharacterProperty ;
-        rdfs:domain  [ owl:unionOf ( arm:Saga arm:GeneralCharacter ) ] ;
         rdfs:range   xsd:string ;
         rdfs:label "Storyguide" .
 arm:hasTitle a   owl:DatatypeProperty ;
@@ -60,7 +59,6 @@ arm:hasCovenant a   owl:ObjectProperty ;
         rdfs:domain  arm:Saga ;
         rdfs:range   arm:Covenant .
 arm:hasCovenantName a   owl:DatatypeProperty, arm:CharacterProperty ;
-        rdfs:domain  [ owl:unionOf( arm:Saga arm:GeneralCharacter ) ] ;
         rdfs:range   xsd:string ;
         rdfs:label    "Covenant"  .
 

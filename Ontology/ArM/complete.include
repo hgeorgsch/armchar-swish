@@ -50,3 +50,21 @@ arm:Winter arm:precedes arm:Spring ;
         rdfs:comment  "This is correct in the Hibernian calender, where the Winter is the first season of the year.  The more conventional calendar has it as the last season of the year.".
 arm:Spring arm:precedes arm:Summer .
 arm:Summer arm:precedes arm:Autumn .
+
+arm:atSeason rdfs:domain  [ owl:disjointUnionOf ( arm:CharacterSheet
+                                             arm:CharacterAdvancement ) ] .
+arm:inYear rdfs:domain  [ owl:disjointUnionOf ( arm:CharacterSheet
+                                             arm:CharacterAdvancement ) ] .
+arm:hasEffect 
+        rdfs:domain  [ owl:unionOf ( arm:warping arm:decrepitude ) ] .
+arm:hasDetail  
+        rdfs:domain  [ owl:unionOf ( arm:Virtue arm:Flaw arm:Spell ) ] .
+arm:hasSG 
+        rdfs:domain  [ owl:unionOf ( arm:Saga arm:GeneralCharacter ) ] .
+arm:hasCovenantName 
+        rdfs:domain  [ owl:unionOf( arm:Saga arm:GeneralCharacter ) ] .
+arm:hasSpeciality
+        rdfs:domain  [ owl:unionOf ( arm:Ability arm:Characteristic ) ] 
+arm:hasOrder  rdfs:domain  [ owl:unionOf ( arm:Trait arm:LeafTraitClass ) ] .
+arm:hasMagnitudeCost 
+           rdfs:domain [ owl:unionOf ( arm:Range arm:Duration arm:Target ) ] .

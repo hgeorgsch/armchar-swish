@@ -26,7 +26,6 @@ arm:Tstr a arm:Target ; rdfs:label  "Structure" ; arm:hasMagnitudeCost 3 .
 arm:Tbound a arm:Target ; rdfs:label  "Boundary" ; arm:hasMagnitudeCost 4 .
 
 arm:hasMagnitudeCost a owl:DatatypeProperty, arm:TraitProperty ;
-           rdfs:domain [ owl:unionOf ( arm:Range arm:Duration arm:Target ) ] ;
            rdfs:range xsd:int .
 
 arm:hasLevel a owl:DatatypeProperty, arm:TraitProperty ;

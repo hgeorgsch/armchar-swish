@@ -33,7 +33,6 @@ arm:Warping a arm:LeafTraitClass ; rdfs:label "Warping" .
 arm:Decrepitude a arm:LeafTraitClass ; rdfs:label "Decrepitude" .
 arm:Confidence a arm:LeafTraitClass ; rdfs:label "Confidence" .
 arm:hasEffect a owl:DatatypeProperty ;
-        rdfs:domain  [ owl:unionOf ( arm:warping arm:decrepitude ) ] ;
         rdfs:range   xsd:string .
 arm:hasPoints a owl:DatatypeProperty, arm:PeristentProperty ;
         rdfs:subPropertyOf arm:hasXP ;
@@ -87,10 +86,8 @@ arm:hasXP  a   owl:DatatypeProperty, arm:TraitProperty ;
         rdfs:range   xsd:int .
 arm:hasDetail  a   owl:DatatypeProperty, arm:TraitProperty, arm:PeristentProperty ;
         rdfs:label   "Detail" ;
-        rdfs:domain  [ owl:unionOf ( arm:Virtue arm:Flaw arm:Spell ) ] ;
         rdfs:range   xsd:string .
 arm:hasSpeciality  a   owl:DatatypeProperty, arm:TraitProperty, arm:PeristentProperty ;
-        rdfs:domain  [ owl:unionOf ( arm:Ability arm:Characteristic ) ] ;
         rdfs:range   xsd:string ;
         rdfs:label   "Speciality" .
 arm:hasType  a   owl:ObjectProperty, arm:TraitProperty, arm:PeristentProperty ;
@@ -136,7 +133,6 @@ arm:hasSpell  rdfs:subPropertyOf   arm:hasTrait ;
 arm:hasOrder  a   owl:DatatypeProperty, arm:TraitProperty, arm:PeristentProperty ;
         rdfs:label  "Sort order" ;
         rdfs:comment  "This is used to sort traits for display purposes" ;
-        rdfs:domain  [ owl:unionOf ( arm:Trait arm:LeafTraitClass ) ] ;
         rdfs:range   xsd:float .
 
 arm:ArtClass rdfs:subClassOf arm:LeafTraitClass ;

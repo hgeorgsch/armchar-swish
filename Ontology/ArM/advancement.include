@@ -37,13 +37,9 @@ arm:hasAdvancementType   a owl:ObjectProperty, arm:PersistentProperty ;
         rdfs:range   arm:AdvancementType ;
         rdfs:label   "Study Mode" .
 arm:atSeason a   owl:DatatypeProperty, arm:PersistentProperty ;
-        rdfs:domain  [ owl:disjointUnionOf ( arm:CharacterSheet
-                                             arm:CharacterAdvancement ) ] ;
         rdfs:range   xsd:string ;
         rdfs:label   "Season" .
 arm:inYear a   owl:DatatypeProperty, arm:PersistentProperty ;
-        rdfs:domain  [ owl:disjointUnionOf ( arm:CharacterSheet
-                                             arm:CharacterAdvancement ) ] ;
         rdfs:range   xsd:int ;
         rdfs:label   "Year" .
 

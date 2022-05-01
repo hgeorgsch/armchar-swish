@@ -50,7 +50,7 @@ lookup :: STM.TVar MapState -> String -> String -> Int
 lookup stateVar char season year = do
           st <- STM.readTVarIO stateVar
           let g = graph st
-          let res = resourceGraph st
+          let res = resourceGraph st `merge` schemaGraph st
           print $ char ++ " - " ++ season ++ " - " ++ show year
           let cl =  C.getAllCS g $ AR.armcharRes char
           print $  AR.armcharRes char
