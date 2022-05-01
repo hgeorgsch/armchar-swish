@@ -20,6 +20,7 @@ import Swish.RDF.Vocabulary.RDF
 import Swish.RDF.Vocabulary.XSD
 import ArM.Resources
 import ArM.Rules.Aux
+-- import ArM.Rules.RDFS
 import Swish.VarBinding (varBindingId) 
 
 prepareResources = fwdApplyList [ vfpRule, vfpMajorRule, vfabRule ] 

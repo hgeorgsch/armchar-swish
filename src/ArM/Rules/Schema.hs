@@ -7,6 +7,8 @@
 -- Maintainer  :  hg+gamer@schaathun.net
 --
 -- Reasoning rules using the schema ontology.
+-- 1. Copy labels
+-- 2. Subproperties of arm:hasTrait
 --
 -----------------------------------------------------------------------------
 
@@ -37,30 +39,23 @@ copyRules = [ makeCRule "cp1" [arc pVar labelRes oVar]
                                [arc pVar labelRes oVar]
              ]
 traitRules = traitRules1 ++ traitRules2
-traitRules1 = map mkr [ "Ability"
-                     , "Virtue"
-                     , "Flaw"
-                     , "PersonalityTrait"
-                     , "Reputation"
-                     , "Spell"
-                     , "Art"
-                     , "OtherTrait"
-                     , "Characteristic" ]
+traitRules1 = map mkr tcs
     where mkr s = mkr' ("has" ++ s ++ "Rule")
                        (Res $ makeSN s) (Res $ makeSN $ "has" ++ s)
           mkr' s t p = makeCRule s g1 g2 where (g1,g2) = arcs1 t p
-traitRules2 = map mkr [ "Ability"
-                     , "Virtue"
-                     , "Flaw"
-                     , "PersonalityTrait"
-                     , "Reputation"
-                     , "Spell"
-                     , "Art"
-                     , "OtherTrait"
-                     , "Characteristic" ]
+traitRules2 = map mkr tcs
     where mkr s = mkr' ("has" ++ s ++ "IRule")
                        (Res $ makeSN s) (Res $ makeSN $ "has" ++ s)
           mkr' s t p = makeCRule s g1 g2 where (g1,g2) = arcs2 t p
+tcs = [ "Ability"
+      , "Virtue"
+      , "Flaw"
+      , "PersonalityTrait"
+      , "Reputation"
+      , "Spell"
+      , "Art"
+      , "OtherTrait"
+      , "Characteristic" ]
 
 arcs1 t p = ( [ arc cVar htRes tVar, arc tVar typeRes t ],
              [ arc cVar p tVar ] ) 

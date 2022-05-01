@@ -36,7 +36,8 @@ s = "{\n     \"arm:hasDescription\": \"<p>You automatically master every spell t
 -- main :: IO ()
 main = do 
 
-     (g,schema,res) <- getGraph AR.characterFile AR.armFile AR.resourceFile
+     (g',schema,res) <- getGraph AR.characterFile AR.armFile AR.resourceFile
+     let g = merge g' schema
      contents <- BS.readFile "Test/adv.json"
      let  adv' :: Maybe Advancement
           adv' = decode contents
@@ -44,8 +45,9 @@ main = do
      let adv = fromJust adv'
      let  advg0 = makeRDFGraph $ adv
      let  advg = merge schema $ makeRDFGraph $ adv
+     print "GRAPH advg0"
      DTIO.putStrLn $ formatGraphAsText $ advg0
-     print "New adventure as submitted"
+     print "GRAPH advg (New advancement with schema)"
      DTIO.putStrLn $ formatGraphAsText $ advg
      print "persistGraph"
      DTIO.putStrLn $ formatGraphAsText $ persistGraph $ advg
@@ -63,6 +65,9 @@ main = do
      let gg1 = merge gg0 advg
      print "New Graph"
      DTIO.putStrLn $ formatGraphAsText $ gg1
+     print "Extract advancement from new graph"
+     let adv1 = TC.fromRDFGraph gg1 (TC.rdfid adv) :: TC.Advancement
+     print adv1
 
 
 

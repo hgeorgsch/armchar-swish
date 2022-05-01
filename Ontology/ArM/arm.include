@@ -101,32 +101,6 @@ arm:Winter  rdfs:label   "Winter" .
 arm:Spring  rdfs:label   "Spring" .
 arm:Summer  rdfs:label   "Summer" .
 arm:Autumn   rdfs:label   "Autumn" .
-arm:precedes a   owl:ObjectProperty ;
-        rdfs:domain  arm:Season ;
-        rdfs:range   arm:Season ;
-        rdfs:comment  "This defines the chronological sort order.".
-arm:Winter arm:precedes arm:Spring ;
-        rdfs:comment  "This is correct in the Hibernian calender, where the Winter is the first season of the year.  The more conventional calendar has it as the last season of the year.".
-arm:Spring arm:precedes arm:Summer .
-arm:Summer arm:precedes arm:Autumn .
-
-arm:SeasonTime a owl:Class ;
-      rdfs:comment  "A SeasonTime has a season and a year, and is thus a uniquely defined time period.  An advanced reasoner is able to sort advancements chronologically using the SeasonTime objects.  It is not used in the Haskell implementation, because it is easier to manage season and year separately. " .
-arm:isSeason a   owl:ObjectProperty ;
-        rdfs:domain  arm:SeasonTime ;
-        rdfs:range   arm:Season .
-arm:isYear a   owl:DatatypeProperty ;
-        rdfs:domain  arm:SeasonTime ;
-        rdfs:range   xsd:int .
-arm:beforeSeasonTime a   owl:ObjectProperty ;
-	a owl:TransitiveProperty ;
-        rdfs:domain  arm:SeasonTime ;
-        rdfs:range   arm:SeasonTime .
-arm:isPrecedingSeasonOf a   owl:ObjectProperty ;
-        rdfs:domain  arm:SeasonTime ;
-        rdfs:range   arm:SeasonTime .
-arm:isSuccedingSeasonOf a   owl:ObjectProperty ;
-        owl:inverseOf arm:isPrecedingSeasonOf .
 
 
 # Character Sheet and Base Character
@@ -142,7 +116,6 @@ arm:hasInitialSheet  a   owl:ObjectProperty ;
         rdfs:range    arm:CharacterSheet ;
         rdfs:domain   arm:BaseCharacter .
 
-arm:ViewProperty a rdf:Property .
-arm:PersistentProperty rdfs:subPropertyOf arm:ViewProperty .
-arm:ImmutableProperty a rdf:Property ;
-        rdfs:subPropertyOf arm:PersistentProperty .
+arm:ViewProperty rdfs:subClassOf rdf:Property .
+arm:PersistentProperty rdfs:subClassOf arm:ViewProperty .
+arm:ImmutableProperty rdfs:subClassOf arm:PersistentProperty .

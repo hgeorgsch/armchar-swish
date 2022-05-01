@@ -25,6 +25,7 @@ executable armchar-swish
                        , ArM.Rules.RDFS
                        , ArM.Rules.FullGraph
                        , ArM.Rules.Schema
+                       , ArM.Rules.InitialCharacter
                        , ArM.Resources
                        , ArM.Character
                        , ArM.Load

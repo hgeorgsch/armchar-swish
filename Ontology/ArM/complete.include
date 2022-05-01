@@ -23,3 +23,30 @@ arm:hasPrevCharacterSheet a owl:ObjectProperty ;
 arm:AdvancementType a owl:Class ;
      owl:oneOf ( arm:Exposure arm:Practice arm:Adventure arm:Training
         arm:Teaching arm:Reading ) .
+
+arm:SeasonTime a owl:Class ;
+      rdfs:comment  "A SeasonTime has a season and a year, and is thus a uniquely defined time period.  An advanced reasoner is able to sort advancements chronologically using the SeasonTime objects.  It is not used in the Haskell implementation, because it is easier to manage season and year separately. " .
+arm:isSeason a   owl:ObjectProperty ;
+        rdfs:domain  arm:SeasonTime ;
+        rdfs:range   arm:Season .
+arm:isYear a   owl:DatatypeProperty ;
+        rdfs:domain  arm:SeasonTime ;
+        rdfs:range   xsd:int .
+arm:beforeSeasonTime a   owl:ObjectProperty ;
+	a owl:TransitiveProperty ;
+        rdfs:domain  arm:SeasonTime ;
+        rdfs:range   arm:SeasonTime .
+arm:isPrecedingSeasonOf a   owl:ObjectProperty ;
+        rdfs:domain  arm:SeasonTime ;
+        rdfs:range   arm:SeasonTime .
+arm:isSuccedingSeasonOf a   owl:ObjectProperty ;
+        owl:inverseOf arm:isPrecedingSeasonOf .
+
+arm:precedes a   owl:ObjectProperty ;
+        rdfs:domain  arm:Season ;
+        rdfs:range   arm:Season ;
+        rdfs:comment  "This defines the chronological sort order.".
+arm:Winter arm:precedes arm:Spring ;
+        rdfs:comment  "This is correct in the Hibernian calender, where the Winter is the first season of the year.  The more conventional calendar has it as the last season of the year.".
+arm:Spring arm:precedes arm:Summer .
+arm:Summer arm:precedes arm:Autumn .

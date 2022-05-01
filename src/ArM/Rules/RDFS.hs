@@ -8,6 +8,8 @@
 -- Maintainer  :  hg+gamer@schaathun.net
 --
 -- Rules and Rules Application for ArM Character Sheets. 
+-- 1.  Transitive subclass/subproperty relations
+-- 2.  Derive type properties
 --
 -----------------------------------------------------------------------------
 

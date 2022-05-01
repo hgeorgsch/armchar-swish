@@ -7,6 +7,10 @@
 -- Maintainer  :  hg+gamer@schaathun.net
 --
 -- Reasoning rules on the full graph using the resource ontology.
+-- 1.  Copy trait properties from class to instance
+-- 2.  Add arm:isSpecialTrait properties
+-- 3.  Add traits granted by virtues and flaws
+-- These rules depends on the resources ontology.
 --
 -----------------------------------------------------------------------------
 
@@ -20,10 +24,16 @@ import Swish.RDF.Vocabulary.RDF
 import Swish.RDF.Vocabulary.XSD
 import ArM.Resources
 import ArM.Rules.Aux
+import ArM.Rules.RDFS
 import Swish.VarBinding (varBindingId) 
 
 -- | Infere resource properties from class
-prepareGraph = fwdApplyListR [ advancevfgrantRule, grantRule, spectraitRule, rRule ]
+prepareGraph res = fwdApplyListSR res [ advancevfgrantRule
+                                      , grantRule
+                                      , spectraitRule
+                                      , rRule ]
+                 . fwdApplyListS res rdfstypeRules
+                 . fwdApplyListSR res rdfsRules
 
 rRule = makeCRule "rRule" l1 l2
     where l1 = [ arc sVar ( Res $ makeSN "traitClass" ) tVar,
@@ -33,12 +43,12 @@ rRule = makeCRule "rRule" l1 l2
 
 
 stcRes = Res $ makeSN "SpecialTraitClass" 
-stcArc = arc tVar typeRes stcRes
 isSTRes = Res $ makeSN "isSpecialTrait" 
-isSTArc = arc sVar isSTRes tVar
 
-spectraitRule = makeCRule  "spectraitRule" [ tArc, stcArc ] [ isSTArc ]
 
+spectraitRule = makeCRule "spectraitRule" [ tArc
+                          , arc tVar typeRes stcRes ]
+                          [ arc sVar isSTRes tVar ]
 
 -- | apply grantsTrait to a CharacterSheet
 grantRule = makeCRule  "grantRule" 
