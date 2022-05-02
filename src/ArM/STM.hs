@@ -46,8 +46,8 @@ getResourceGraph st = fmap resourceGraph $ STM.readTVarIO st
 getResGraph :: STM.TVar MapState -> IO G.RDFGraph
 getResGraph st = fmap resGraph $ STM.readTVarIO st
 getCGraph st = do
-     g <- getStateGraph
-     res <- getResGraph
+     g <- getStateGraph st
+     res <- getResGraph st
      return $ g `merge` res
 
 persistGraph schema g = foldGraphs $ Q.rdfQuerySubs vb tg
