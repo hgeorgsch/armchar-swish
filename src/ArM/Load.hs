@@ -14,8 +14,6 @@
 module ArM.Load where
 
 import ArM.Resources
-import ArM.Rules
-import ArM.Rules.RDFS
 
 import System.IO ( IO, readFile )
 import Swish.RDF.Graph (emptyGraph,RDFGraph,merge)
@@ -33,16 +31,13 @@ readGraph fn = do
                return emptyGraph
            (Right g ) -> return g
 
--- | Load the different graph and make initial inferences
--- See diagram in README.
--- Note.  The character graph has to be augmented in `ArM.STM`.
+-- | Load the different graphs from file.
+-- Inference is deferred to the `STM` module.
 getGraph :: String -> String -> String -> IO (RDFGraph,RDFGraph,RDFGraph)
 getGraph characterFile armFile resourceFile = do
         character <- readGraph characterFile 
-        schemaGraph' <- readGraph armFile 
-        resourceGraph' <- readGraph resourceFile 
-        let schemaGraph = prepareSchema schemaGraph'
-        let resourceGraph = prepareResources resourceGraph'
+        schemaGraph <- readGraph armFile 
+        resourceGraph <- readGraph resourceFile 
         -- let characterGraph = prepareInitialCharacter schemaGraph character
         -- let charGraph = prepareGraph resourceGraph characterGraph 
         -- let res = applyRDFS $ merge schemaGraph resourceGraph
