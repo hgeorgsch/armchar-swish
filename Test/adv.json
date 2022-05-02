@@ -10,7 +10,8 @@
                 "prefixedid": "arm:Reading"
             },
             "arm:hasAdvancementTypeString": "Reading",
-            "arm:inYear": 1217
+            "arm:inYear": 1217,
+            "arm:atSeason": "Autumn"
         },
         "advancementid": {
             "prefixedid": "<https://hg.schaathun.net/armchar/character/cieran#autumn1217adv>"
