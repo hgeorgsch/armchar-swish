@@ -58,7 +58,7 @@ main = do
      -- let cl =  fromJust $ C.getAllCS g testCharacter
      -- let cmap = CM.insertListS res CM.empty $ cl
      -- let cmap = CM.insertList CM.empty $ cl
-     stateVar <- getSTM res schema (merge g schema) testCharacter
+     stateVar <- getSTM res schema g 
 
      -- print $ C.getGameStartCharacter g $ testCharacter
      -- print $ encodePretty $ A.getIngameAdvancements g testCharacter

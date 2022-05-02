@@ -27,7 +27,10 @@ data MapState = MapState { graph :: G.RDFGraph,
                            resourceGraph :: G.RDFGraph,
                            resGraph :: G.RDFGraph }
 
-getSTM r s g char = STM.newTVarIO MapState { 
+updateMapState st g = st { graph = g' }
+                  where g' = R.prepareGraph res g
+                        res = resourceGraph st
+getMapState r s g = MapState { 
                   graph = g',
                   schemaGraph = schema,
                   resourceGraph = res,
@@ -36,19 +39,28 @@ getSTM r s g char = STM.newTVarIO MapState {
                         g' = R.prepareGraph res g
                         schema = R.prepareSchema s
                         res = R.prepareResources r
+getSTM r s g = STM.newTVarIO $ getMapState r s g
 
-getStateGraph :: STM.TVar MapState -> IO G.RDFGraph
-getStateGraph st = fmap graph $ STM.readTVarIO st
-getSchemaGraph :: STM.TVar MapState -> IO G.RDFGraph
-getSchemaGraph st = fmap schemaGraph $ STM.readTVarIO st
-getResourceGraph :: STM.TVar MapState -> IO G.RDFGraph
-getResourceGraph st = fmap resourceGraph $ STM.readTVarIO st
-getResGraph :: STM.TVar MapState -> IO G.RDFGraph
-getResGraph st = fmap resGraph $ STM.readTVarIO st
+getStateGraphIO :: STM.TVar MapState -> IO G.RDFGraph
+getStateGraphIO st = fmap graph $ STM.readTVarIO st
+getSchemaGraphIO :: STM.TVar MapState -> IO G.RDFGraph
+getSchemaGraphIO st = fmap schemaGraph $ STM.readTVarIO st
+getResourceGraphIO :: STM.TVar MapState -> IO G.RDFGraph
+getResourceGraphIO st = fmap resourceGraph $ STM.readTVarIO st
+getResGraphIO :: STM.TVar MapState -> IO G.RDFGraph
+getResGraphIO st = fmap resGraph $ STM.readTVarIO st
+getStateGraph :: STM.TVar MapState -> STM.STM G.RDFGraph
+getStateGraph st = fmap graph $ STM.readTVar st
+getSchemaGraph :: STM.TVar MapState -> STM.STM G.RDFGraph
+getSchemaGraph st = fmap schemaGraph $ STM.readTVar st
+getResourceGraph :: STM.TVar MapState -> STM.STM G.RDFGraph
+getResourceGraph st = fmap resourceGraph $ STM.readTVar st
+getResGraph :: STM.TVar MapState -> STM.STM G.RDFGraph
+getResGraph st = fmap resGraph $ STM.readTVar st
 getCGraph st = do
      g <- getStateGraph st
      res <- getResGraph st
-     return $ g `merge` res
+     return $ R.prepareGraph res g 
 
 persistGraph schema g = foldGraphs $ Q.rdfQuerySubs vb tg
     where vb = Q.rdfQueryFind qg g'
@@ -68,8 +80,8 @@ rdfs g = merge g $ fwdApplyList rdfstypeRules g
 lookup :: STM.TVar MapState -> String -> String -> Int 
        -> IO (Maybe CM.CharacterRecord)
 lookup stateVar char season year = do
-          g <- getStateGraph stateVar
-          res <- getResGraph stateVar
+          g <- STM.atomically $ getStateGraph stateVar
+          res <- STM.atomically $ getResGraph stateVar
           print $ char ++ " - " ++ season ++ " - " ++ show year
           let cl =  C.getAllCS g $ AR.armcharRes char
           print $  AR.armcharRes char
@@ -91,7 +103,7 @@ putAdvancement :: STM.TVar MapState -> TC.Advancement -> IO G.RDFGraph
 putAdvancement stateVar adv = do 
          STM.atomically $ do
              st <- STM.readTVar stateVar
-             let g = graph st
+             g <- getCGraph stateVar
              let res = resGraph st
              let schema = schemaGraph st
              let g1 = persistGraph schema $ TC.makeRDFGraph adv
@@ -99,8 +111,8 @@ putAdvancement stateVar adv = do
              let g0 = TC.makeRDFGraph adv0
              let gg = putGraph g g0 g1
              st <- STM.readTVar stateVar
-             STM.writeTVar stateVar $ st { graph = R.prepareGraph res gg }
-             return g1
+             STM.writeTVar stateVar $ st `updateMapState` gg 
+             return gg
           
 -- TODO: Check for conflicting advancements 
 
