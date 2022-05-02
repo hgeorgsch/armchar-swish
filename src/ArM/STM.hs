@@ -32,7 +32,7 @@ getSTM r s g char = STM.newTVarIO MapState {
                   schemaGraph = schema,
                   resourceGraph = res,
                   resGraph = res'  }
-                  where res' = res `merge` schema
+                  where res' = R.prepareResources $ res `merge` schema
                         g' = R.prepareGraph res g
                         schema = R.prepareSchema s
                         res = R.prepareResources r
@@ -45,6 +45,10 @@ getResourceGraph :: STM.TVar MapState -> IO G.RDFGraph
 getResourceGraph st = fmap resourceGraph $ STM.readTVarIO st
 getResGraph :: STM.TVar MapState -> IO G.RDFGraph
 getResGraph st = fmap resGraph $ STM.readTVarIO st
+getCGraph st = do
+     g <- getStateGraph
+     res <- getResGraph
+     return $ g `merge` res
 
 persistGraph schema g = foldGraphs $ Q.rdfQuerySubs vb tg
     where vb = Q.rdfQueryFind qg g'
