@@ -151,7 +151,7 @@ stateScotty stateVar = do
         put "/adv" $ do
           adv <- jsonData :: ActionM C.Advancement 
           newg <- liftIO $ putAdvancement stateVar adv
-          liftIO $ print adv
+          liftIO $ print  adv
           printGraph newg
 
 notfound404 = do status notFound404

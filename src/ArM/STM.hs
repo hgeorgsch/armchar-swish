@@ -13,6 +13,7 @@ import qualified ArM.Types.Character as TC
 import qualified ArM.Resources as AR
 
 import ArM.Rules.Aux
+import ArM.Rules.RDFS
 import qualified ArM.Rules as R
 import ArM.Resources
 import Swish.RDF.Graph
@@ -45,17 +46,20 @@ getResourceGraph st = fmap resourceGraph $ STM.readTVarIO st
 getResGraph :: STM.TVar MapState -> IO G.RDFGraph
 getResGraph st = fmap resGraph $ STM.readTVarIO st
 
-persistGraph g = foldGraphs $ Q.rdfQuerySubs vb tg
-    where vb = Q.rdfQueryFind qg g
+persistGraph schema g = foldGraphs $ Q.rdfQuerySubs vb tg
+    where vb = Q.rdfQueryFind qg g'
           qg = G.toRDFGraph $ fromList [ arc sVar pVar cVar,
                        arc pVar typeRes armPersistentProperty ]
           tg = G.toRDFGraph $ fromList [ arc sVar pVar cVar ]
+          g' = rdfs $ schema `merge` g
 
 persistRule = makeCRule "persistRule" 
     [ arc sVar pVar cVar,
       arc pVar typeRes armPersistentProperty ]
     [ arc sVar pVar cVar ]
-persistGraph' g = fwdApplySimple persistRule g
+-- persistGraph' schema = fwdApplySimple persistRule . rdfs schema 
+
+rdfs g = merge g $ fwdApplyList rdfstypeRules g 
 
 lookup :: STM.TVar MapState -> String -> String -> Int 
        -> IO (Maybe CM.CharacterRecord)
@@ -86,7 +90,7 @@ putAdvancement stateVar adv = do
              let g = graph st
              let res = resGraph st
              let schema = schemaGraph st
-             let g1 = persistGraph $ merge schema $ TC.makeRDFGraph adv
+             let g1 = persistGraph schema $ TC.makeRDFGraph adv
              let adv0 = TC.fromRDFGraph g (TC.rdfid adv) :: TC.Advancement
              let g0 = TC.makeRDFGraph adv0
              let gg = putGraph g g0 g1
