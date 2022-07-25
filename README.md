@@ -9,6 +9,7 @@ It has no real features.
 
 + [Update](Design/Update)
 + [Ontology](Ontology/README.md)
++ [Tests](Tests.md) showing current features of the web API
 
 ## Testing
 
@@ -67,7 +68,6 @@ cat | http put :3000/adv
     }
 ```
 Obviously, if you have a JSON test file, you can redirect from file instead.
-
 
 ## Problems
 
