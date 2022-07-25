@@ -79,7 +79,7 @@ as far as I can tell:
       and RDFS inferences are actually useful for us.
 + No ready to use function to apply rulesets.
     - However, such generic functions could be expensive.
-    - A recursive function 'fwdApplyListR' has been implemented
+    - A recursive function `fwdApplyListR` has been implemented
       to solve this problem and it seems to work well.
 + Rules cannot easily be defined in a separate file in a separate
   rules language.  The focus of Swish has been the script language.
@@ -88,7 +88,7 @@ as far as I can tell:
     - However, not using JSON-LD may make the client a lot easier
       to implement
 + No noValue clause
-    - However, the noValue clause make the reasoner expensive.
+    - However, the noValue clause makes the reasoner expensive.
     - Coding the inference without noValue is more efficient.
 
 
