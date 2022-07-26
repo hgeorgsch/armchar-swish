@@ -66,12 +66,6 @@ initialsheetRule = makeCRule "initialsheetRule"
 prepareCharGraph :: RDFGraph -> RDFGraph
 prepareCharGraph = fwdApplyList [ initialsheetRule, traitclasstypeRule ]
 
--- | Make all necessary inferences before retrieving character data
-prepareInitialCharacter :: RDFGraph -> RDFGraph
-prepareInitialCharacter = 
-   fwdApplyList (
-      csRule:advtypeRule:traitclassRule:advancementindexRule:rdfstypeRules )
-
 -- | Apply standard RDFS rules to elaborate the schema
 -- This is used only once, so it may be allowed to be costly.
 prepareSchema :: RDFGraph -> RDFGraph
@@ -81,7 +75,9 @@ prepareSchema = fwdApplyListR rdfsRules
 -- This is expensive, and may need caution.
 -- It will be applied every time the graph changes, and the graph
 -- is large
-prepareGraph = RG.prepareGraph . applyRDFS
+prepareGraph = RG.prepareGraph .  fwdApplyList rl
+    where rl =
+      csRule:advtypeRule:traitclassRule:advancementindexRule:rdfstypeRules 
 
 prepareResources = RR.prepareResources . applyRDFS
                  . fwdApplyList [ traitclasstypeRule ]

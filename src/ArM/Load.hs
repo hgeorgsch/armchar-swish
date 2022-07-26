@@ -33,23 +33,21 @@ readGraph fn = do
                return emptyGraph
            (Right g ) -> return g
 
+deriveGraph (c,s,r) = s1 `par` c0 `par` r0 `pseq` (c1,s1,r1)
+     where  c1 = prepareGraph  $ merge r1 c0
+            c0 = prepareCharGraph c
+            s1 = prepareSchema s
+            r1 = applyRDFS $ merge s1 r0
+            r0 = prepareResources r
+
 -- | Load the different graph and make initial inferences
 -- See diagram in README.
 -- Note: the third graph `res` has merged the schema and the resource
 -- graph.  This is not reflected in the diagram.
 getGraph :: String -> String -> String -> IO (RDFGraph,RDFGraph,RDFGraph)
 getGraph characterFile armFile resourceFile = do
-        character <- readGraph characterFile 
-        let characterGraph' = prepareCharGraph character
-        schemaGraph' <- readGraph armFile 
-        let schemaGraph = prepareSchema schemaGraph'
-        res0 <- readGraph resourceFile 
-        let res1 = prepareResources res0
-        let characterGraph =
-              prepareInitialCharacter $ merge schemaGraph characterGraph'
-        let graph = prepareGraph $ merge res1 characterGraph 
-        let resourceGraph = applyRDFS $ merge schemaGraph res1
-        return $ schemaGraph `par` res1 `par` resourceGraph `par`
-               characterGraph `pseq`
-               ( graph, schemaGraph, resourceGraph )
+        c <- readGraph characterFile 
+        s <- readGraph armFile 
+        r <- readGraph resourceFile 
+        return $ deriveGraph (c,s,r)
 
