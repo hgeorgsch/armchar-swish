@@ -11,7 +11,11 @@
 -- Each character sheet is stored as one RDFGraph.
 --
 -----------------------------------------------------------------------------
-module ArM.CharacterMap where
+module ArM.CharacterMap ( CharacterRecord(..)
+                        , insertListS
+                        , empty 
+                        , ArM.CharacterMap.lookup 
+                        ) where
 
 import qualified Data.Map as M
 import qualified Swish.RDF.Graph as G
@@ -27,10 +31,12 @@ data CharacterKey = CharacterKey {
             keyChar :: String } deriving (Ord,Eq,Show)
 data CharacterRecord = CharacterRecord G.RDFGraph
 
+-- | Prepare character sheet with a given schema and insert into the map 
 insertS :: G.RDFGraph -> CharacterMap -> C.CharacterSheet -> CharacterMap
 insertS schema cmap cs = M.insert (getKey cs) cr cmap
     where cr = CharacterRecord $ R.prepareRecord schema $ C.makeRDFGraph cs
 
+-- | Add a character sheet into the map (not used).
 insert :: CharacterMap -> C.CharacterSheet -> CharacterMap
 insert cmap cs = M.insert (getKey cs) cr cmap
     where cr = CharacterRecord $ C.makeRDFGraph cs
@@ -49,8 +55,11 @@ seasonString (Just x ) | x == springLabel = "Spring"
                    | x == winterLabel = "Winter"
                    | otherwise  = "NoSeason"
 
+-- | Add a list of character sheets into the map (not used).
 insertList :: CharacterMap -> [C.CharacterSheet] -> CharacterMap
 insertList cmap cs = foldl insert cmap cs
+
+-- | Prepare a list of character sheets with a given schema and insert into the map 
 insertListS :: G.RDFGraph -> CharacterMap -> [C.CharacterSheet] -> CharacterMap
 insertListS schema cmap cs = foldl (insertS schema) cmap cs
 
