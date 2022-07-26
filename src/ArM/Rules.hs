@@ -76,8 +76,8 @@ prepareSchema = fwdApplyListR rdfsRules
 -- It will be applied every time the graph changes, and the graph
 -- is large
 prepareGraph = RG.prepareGraph .  fwdApplyList rl
-    where rl =
-      csRule:advtypeRule:traitclassRule:advancementindexRule:rdfstypeRules 
+  where 
+    rl = csRule:advtypeRule:traitclassRule:advancementindexRule:rdfstypeRules 
 
 prepareResources = RR.prepareResources . applyRDFS
                  . fwdApplyList [ traitclasstypeRule ]
