@@ -81,7 +81,7 @@ prepareSchema = fwdApplyListR rdfsRules
 -- This is expensive, and may need caution.
 -- It will be applied every time the graph changes, and the graph
 -- is large
-prepareGraph = RG.prepareGraph . applyRDFS
+prepareGraph = RG.prepareGraph . applyRDFS . prepareInitialCharacter
 
 prepareResources = RR.prepareResources . applyRDFS
                  . fwdApplyList [ traitclasstypeRule ]

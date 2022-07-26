@@ -30,7 +30,7 @@ import Data.SecureMem -- for constant-time comparison
 -- Timer
 import ArM.Time
 
-import ArM.Load (getGraph)
+import qualified ArM.Load as Load
 import qualified ArM.Resources as AR
 import qualified ArM.Character.Character as C
 import qualified ArM.CharacterQuery as CQ
@@ -48,17 +48,14 @@ testCharacter = AR.armcharRes "cieran"
 
 -- main :: IO ()
 main = do 
-     (g,schema,res) <- getGraph AR.characterFile AR.armFile AR.resourceFile
-
-
-     --print $ TTL.formatGraphAsText $ schema
-     --print $ TTL.formatGraphAsText $ res
-     --print $ TTL.formatGraphAsText $ g
 
      -- let cl =  fromJust $ C.getAllCS g testCharacter
      -- let cmap = CM.insertListS res CM.empty $ cl
      -- let cmap = CM.insertList CM.empty $ cl
-     stateVar <- getSTM res schema (merge g schema) 
+     f1 <- Load.getRawResources 
+     f2 <- Load.getRawSchema 
+     f3 <- Load.getRawChar
+     stateVar <- getSTM f1 f2 f3
 
      -- print $ C.getGameStartCharacter g $ testCharacter
      -- print $ encodePretty $ A.getIngameAdvancements g testCharacter

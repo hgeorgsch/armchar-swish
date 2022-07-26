@@ -41,7 +41,7 @@ raw resources ---------> res1 ------->merge -------> resourceGraph ->|
 
 ### Notes
 
-+ `prepareCS` makes only a few inferences to simplify future queries
++ `prepareGharGraph` makes only a few inferences to simplify future queries
 + `prepareSchema` does subclass inference and similar rules
 + `prepareInitialCharacter` makes the CharacterSheet from the Character
     - character inherit data from covenant or saga

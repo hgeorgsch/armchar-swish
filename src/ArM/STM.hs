@@ -15,6 +15,8 @@ import qualified ArM.Resources as AR
 import ArM.Rules.Aux
 import ArM.Resources
 import Swish.RDF.Graph
+import ArM.Rules 
+import ArM.Rules.RDFS
 
 import Data.Set (fromList)
 
@@ -26,12 +28,31 @@ data MapState = MapState { graph :: G.RDFGraph,
 
 getSTM res schema g = STM.newTVarIO MapState { graph = g, schemaGraph = schema, resourceGraph = res  }
 
+getRawCharGraph :: STM.TVar MapState -> IO G.RDFGraph
+getRawCharGraph st = fmap graph $ STM.readTVarIO st
+getRawSchemaGraph :: STM.TVar MapState -> IO G.RDFGraph
+getRawSchemaGraph st = fmap schemaGraph $ STM.readTVarIO st
+getRawResourceGraph :: STM.TVar MapState -> IO G.RDFGraph
+getRawResourceGraph st = fmap resourceGraph $ STM.readTVarIO st
+
+getCharGraph :: STM.TVar MapState -> IO G.RDFGraph
+getCharGraph st = fmap prepareCharGraph $ getRawSchemaGraph st
+
+makeStateGraph :: MapState -> G.RDFGraph
+makeStateGraph st = prepareGraph $ merge r c
+   where r = makeResourceGraph st
+         c = prepareCharGraph $ graph st
 getStateGraph :: STM.TVar MapState -> IO G.RDFGraph
-getStateGraph st = fmap graph $ STM.readTVarIO st
+getStateGraph st = fmap makeStateGraph $ STM.readTVarIO st
+
 getSchemaGraph :: STM.TVar MapState -> IO G.RDFGraph
-getSchemaGraph st = fmap schemaGraph $ STM.readTVarIO st
+getSchemaGraph st = fmap prepareSchema $ getRawSchemaGraph st
+makeResourceGraph :: MapState -> G.RDFGraph
+makeResourceGraph st = applyRDFS $ merge r0 s
+   where r0 = prepareResources $ resourceGraph st
+         s = prepareSchema $ schemaGraph st
 getResourceGraph :: STM.TVar MapState -> IO G.RDFGraph
-getResourceGraph st = fmap resourceGraph $ STM.readTVarIO st
+getResourceGraph st = fmap makeResourceGraph $ STM.readTVarIO st
 
 persistGraph g = foldGraphs $ Q.rdfQuerySubs vb tg
     where vb = Q.rdfQueryFind qg g

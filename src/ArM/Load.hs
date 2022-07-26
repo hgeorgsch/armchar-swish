@@ -33,6 +33,11 @@ readGraph fn = do
                return emptyGraph
            (Right g ) -> return g
 
+getRawChar = readGraph characterFile 
+getRawSchema = readGraph armFile 
+getRawResources = readGraph resourceFile 
+
+
 -- | Load the different graph and make initial inferences
 -- See diagram in README.
 -- Note: the third graph `res` has merged the schema and the resource
